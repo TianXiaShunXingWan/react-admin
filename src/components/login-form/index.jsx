@@ -2,9 +2,19 @@ import React, {Component} from 'react';
 import {
   Form, Icon, Input, Button, message
 } from 'antd';
+import PropTypes from 'prop-types'
+
+
 
  class LoginForm extends Component {
 
+  static propTypes = {
+    login:PropTypes.func.isRequired
+  }
+   state={
+     username:'',
+     password:''
+   }
 
    customEvent = (rule, value, callback) => {
      if (!value) {
@@ -25,13 +35,19 @@ import {
    handleSubmit = e => {
      e.preventDefault();
      const {validateFields, resetFields} = this.props.form;
-     console.log(validateFields());
-     validateFields((error, values) => {
+     validateFields(async (error, values) => {
        // console.log(error, values);
-       console.log(Object());
+       // console.log(Object());
        if (!error) {
-         console.log('收集的表单数据：', values);
+         const {username,password} = values
+          this.props.login(username,password)
+         // console.log('收集的表单数据：', values);
        } else {
+         const {username,password} = values
+         this.setState={
+           username,
+           password:''
+         }
          resetFields(['password']);
          const errMsg = Object.values(error).reduce((prev, curr) => prev + curr.errors[0].message + ' ', '')
 
@@ -44,6 +60,7 @@ import {
   render () {
     const Item = Form.Item
     const { getFieldDecorator } = this.props.form;
+    const login = this.props.login
 
     return (
 
